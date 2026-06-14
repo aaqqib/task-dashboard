@@ -236,9 +236,13 @@ export default function App() {
         setCategories((prev) => [...prev, newCat]);
         setNewCatName('');
         setNewCatEmoji('🏷️');
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(`Failed to create category: ${errData.error || 'Server error'}`);
       }
     } catch (e) {
       console.error('Error creating category:', e);
+      alert(`Network error creating category: ${e.message}`);
     }
   };
 

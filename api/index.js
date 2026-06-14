@@ -20,6 +20,11 @@ if (fs.existsSync(distPath)) {
 // Database Integration
 const defaultDB = {
   tasks: [],
+  categories: [
+    { id: 'cat_job', name: 'Job', color: '#3b82f6', emoji: '💼' },
+    { id: 'cat_personal', name: 'Personal', color: '#a855f7', emoji: '👤' },
+    { id: 'cat_health', name: 'Health', color: '#10b981', emoji: '🍏' }
+  ],
   config: {
     telegramToken: '',
     authorizedChatId: '',
@@ -56,37 +61,71 @@ const ensureLocalDir = () => {
   }
 };
 
+let inMemoryDB = null;
+
 async function getDB() {
   if (kvClient) {
     try {
       const data = await kvClient.get('dashboard_db');
       return data || defaultDB;
     } catch (e) {
-      console.error('KV get error, falling back:', e);
-      return defaultDB;
+      console.error('KV get error, falling back to in-memory:', e);
+      if (!inMemoryDB) inMemoryDB = defaultDB;
+      return inMemoryDB;
     }
-  } else {
+  }
+
+  // Local file storage mode
+  try {
     ensureLocalDir();
     if (!fs.existsSync(LOCAL_DB_PATH)) {
       fs.writeFileSync(LOCAL_DB_PATH, JSON.stringify(defaultDB, null, 2));
       return defaultDB;
     }
-    try {
-      const raw = fs.readFileSync(LOCAL_DB_PATH, 'utf8');
-      return JSON.parse(raw);
-    } catch (err) {
-      console.error('Error reading local db:', err);
-      return defaultDB;
+    const raw = fs.readFileSync(LOCAL_DB_PATH, 'utf8');
+    const db = JSON.parse(raw);
+    
+    // Backwards compatibility check
+    let updated = false;
+    if (!db.categories) {
+      db.categories = defaultDB.categories;
+      updated = true;
     }
+    if (!db.config) {
+      db.config = defaultDB.config;
+      updated = true;
+    }
+    if (updated) {
+      fs.writeFileSync(LOCAL_DB_PATH, JSON.stringify(db, null, 2));
+    }
+    return db;
+  } catch (err) {
+    console.warn('Local file system read/write failed. Falling back to in-memory database:', err.message);
+    if (!inMemoryDB) {
+      inMemoryDB = defaultDB;
+    }
+    return inMemoryDB;
   }
 }
 
 async function saveDB(data) {
   if (kvClient) {
-    await kvClient.set('dashboard_db', data);
-  } else {
+    try {
+      await kvClient.set('dashboard_db', data);
+      return;
+    } catch (e) {
+      console.error('KV save error, falling back to in-memory:', e);
+      inMemoryDB = data;
+      return;
+    }
+  }
+
+  try {
     ensureLocalDir();
     fs.writeFileSync(LOCAL_DB_PATH, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.warn('Local file system write failed. Saving to in-memory database:', err.message);
+    inMemoryDB = data;
   }
 }
 
@@ -102,7 +141,7 @@ app.get('/api/tasks', async (req, res) => {
 
 app.post('/api/tasks', async (req, res) => {
   try {
-    const { text, status } = req.body;
+    const { text, status, categoryId } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
 
     const db = await getDB();
@@ -110,6 +149,7 @@ app.post('/api/tasks', async (req, res) => {
       id: 'task_' + Math.random().toString(36).substr(2, 9),
       text,
       status: status || 'inbox',
+      categoryId: categoryId || null,
       createdAt: new Date().toISOString()
     };
     db.tasks.push(newTask);
@@ -123,7 +163,7 @@ app.post('/api/tasks', async (req, res) => {
 app.put('/api/tasks/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { text, status } = req.body;
+    const { text, status, categoryId } = req.body;
     const db = await getDB();
     
     let updatedTask = null;
@@ -133,6 +173,7 @@ app.put('/api/tasks/:id', async (req, res) => {
           ...t, 
           text: text !== undefined ? text : t.text,
           status: status !== undefined ? status : t.status,
+          categoryId: categoryId !== undefined ? categoryId : t.categoryId,
           completedAt: status === 'done' ? new Date().toISOString() : t.completedAt
         };
         return updatedTask;
@@ -161,6 +202,60 @@ app.delete('/api/tasks/:id', async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
+    await saveDB(db);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Categories Routes
+app.get('/api/categories', async (req, res) => {
+  try {
+    const db = await getDB();
+    res.json(db.categories || []);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/categories', async (req, res) => {
+  try {
+    const { name, color, emoji } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name required' });
+    
+    const db = await getDB();
+    if (!db.categories) db.categories = [];
+    
+    const newCategory = {
+      id: 'cat_' + Math.random().toString(36).substr(2, 9),
+      name,
+      color: color || 'var(--accent-teal)',
+      emoji: emoji || '📁'
+    };
+    db.categories.push(newCategory);
+    await saveDB(db);
+    res.status(201).json(newCategory);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.delete('/api/categories/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const db = await getDB();
+    
+    if (!db.categories) db.categories = [];
+    db.categories = db.categories.filter(c => c.id !== id);
+    
+    db.tasks = db.tasks.map(t => {
+      if (t.categoryId === id) {
+        return { ...t, categoryId: null };
+      }
+      return t;
+    });
+    
     await saveDB(db);
     res.json({ success: true });
   } catch (e) {
