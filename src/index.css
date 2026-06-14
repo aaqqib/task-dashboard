@@ -2,15 +2,18 @@
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Premium HSL Slate/Dark Theme */
-  --bg-main: 222 47% 7%;
-  --bg-card: 222 47% 11%;
-  --bg-card-hover: 222 47% 14%;
-  --bg-input: 222 35% 16%;
-  --border-color: 222 30% 18%;
-  --text-main: 210 40% 98%;
-  --text-muted: 215 20% 65%;
-  --text-dim: 215 15% 45%;
+  /* Premium Sunset Trello Theme Colors */
+  --bg-inbox: #0a1120;
+  --bg-board-gradient: linear-gradient(135deg, #2c0b4d 0%, #440d42 50%, #5c1136 100%);
+  --bg-column: #16181a;
+  --bg-card: #222527;
+  --bg-card-hover: #2c2f32;
+  --bg-input: #1b1e20;
+  --border-color: rgba(255, 255, 255, 0.05);
+
+  --text-main: #f1f3f5;
+  --text-muted: #abb5be;
+  --text-dim: #6c757d;
 
   /* Accent Colors */
   --accent-teal: 174 75% 45%;
@@ -34,12 +37,13 @@
 }
 
 body {
-  background-color: hsl(var(--bg-main));
-  color: hsl(var(--text-main));
+  background-color: var(--bg-inbox);
+  color: var(--text-main);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -56,42 +60,41 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border-color));
+  background: var(--border-color);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--text-dim));
+  background: var(--text-dim);
 }
 
-/* Glassmorphism utilities */
+/* Glassmorphism Panel */
 .glass-panel {
-  background: rgba(11, 19, 36, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(10, 17, 32, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.glass-card {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* Trello Card Styles */
+.trello-card {
+  background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.03);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-card:hover {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(15, 23, 42, 0.65);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+.trello-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
 }
 
-/* Card Add Animation */
+/* Add animations */
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -103,7 +106,6 @@ h1, h2, h3, h4, h5, h6 {
   animation: slideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Loading Spinner */
 .spinner {
   width: 18px;
   height: 18px;
@@ -117,7 +119,6 @@ h1, h2, h3, h4, h5, h6 {
   to { transform: rotate(360deg); }
 }
 
-/* Pulse animation */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
