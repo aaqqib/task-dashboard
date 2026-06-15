@@ -451,6 +451,7 @@ export default function App() {
                           borderRadius: 'var(--border-radius-sm)',
                           padding: 6,
                           fontSize: 13,
+                          fontWeight: 600,
                           fontFamily: 'inherit',
                           outline: 'none',
                           resize: 'none',
@@ -483,20 +484,20 @@ export default function App() {
                   ) : (
                     <>
                       {category && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '9px', fontWeight: 700, padding: '1px 6px', borderRadius: '8px', background: `${category.color}15`, color: category.color, border: `1px solid ${category.color}25`, marginBottom: '6px' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '12px', background: `${category.color}15`, color: category.color, border: `1px solid ${category.color}25`, marginBottom: '8px' }}>
                           {category.emoji} {category.name}
                         </span>
                       )}
-                      <div style={{ fontSize: 13, lineHeight: 1.4, color: '#f1f3f5' }}>{task.text}</div>
+                      <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, color: '#f1f3f5' }}>{task.text}</div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.02)' }}>
-                        <div style={{ display: 'flex', gap: 4 }}>
+                        <div style={{ display: 'flex', gap: 6 }}>
                           {COLUMNS.map(c => (
-                            <button key={c.id} onClick={() => handleMoveTask(task.id, c.id)} title={`Move to ${c.name}`} style={{ background: 'rgba(255,255,255,0.02)', border: 'none', color: 'var(--text-muted)', padding: '2px 4px', borderRadius: 3, fontSize: 10, cursor: 'pointer' }}>{c.icon}</button>
+                            <button key={c.id} onClick={() => handleMoveTask(task.id, c.id)} title={`Move to ${c.name}`} style={{ background: 'rgba(255,255,255,0.03)', border: 'none', color: 'var(--text-muted)', padding: '4px 8px', borderRadius: 6, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{c.icon}</button>
                           ))}
                         </div>
-                        <div style={{ display: 'flex', gap: 4 }}>
-                          <button onClick={() => handleMoveTask(task.id, 'done')} style={{ background: 'rgba(28, 196, 173, 0.08)', border: 'none', color: 'hsl(var(--accent-teal))', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10 }}>✓</button>
-                          <button onClick={() => handleDeleteTask(task.id)} style={{ background: 'rgba(239, 68, 68, 0.08)', border: 'none', color: 'hsl(var(--accent-red))', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10 }}>🗑</button>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <button onClick={() => handleMoveTask(task.id, 'done')} style={{ background: 'rgba(28, 196, 173, 0.08)', border: 'none', color: 'hsl(var(--accent-teal))', width: 24, height: 24, borderRadius: '50%', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✓</button>
+                          <button onClick={() => handleDeleteTask(task.id)} style={{ background: 'rgba(239, 68, 68, 0.08)', border: 'none', color: 'hsl(var(--accent-red))', width: 24, height: 24, borderRadius: '50%', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗑</button>
                         </div>
                       </div>
                     </>
@@ -518,7 +519,7 @@ export default function App() {
                     if (e.key === 'Enter') handleAddTask('inbox');
                     else if (e.key === 'Escape') setAddingToCol(null);
                   }}
-                  style={{ width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border-color)', color: '#fff', padding: '8px 12px', borderRadius: 'var(--border-radius-sm)', fontSize: 13, outline: 'none' }}
+                  style={{ width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border-color)', color: '#fff', padding: '8px 12px', borderRadius: 'var(--border-radius-sm)', fontSize: 13, fontWeight: 600, outline: 'none' }}
                   autoFocus
                 />
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -694,6 +695,7 @@ export default function App() {
                                 borderRadius: 'var(--border-radius-sm)',
                                 padding: 6,
                                 fontSize: 13,
+                                fontWeight: 600,
                                 fontFamily: 'inherit',
                                 outline: 'none',
                                 resize: 'none',
@@ -726,21 +728,21 @@ export default function App() {
                         ) : (
                           <>
                             {category && (
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', fontSize: '8px', fontWeight: 800, padding: '1px 5px', borderRadius: '6px', background: `${category.color}15`, color: category.color, border: `1px solid ${category.color}25`, marginBottom: '6px' }}>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '12px', background: `${category.color}15`, color: category.color, border: `1px solid ${category.color}25`, marginBottom: '8px' }}>
                                 {category.emoji} {category.name}
                               </span>
                             )}
-                            <div style={{ fontSize: 13, lineHeight: 1.4, color: '#f1f3f5' }}>{task.text}</div>
+                            <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, color: '#f1f3f5' }}>{task.text}</div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 6, borderTop: '1px solid rgba(255,255,255,0.02)' }}>
-                              <div style={{ display: 'flex', gap: 3 }}>
-                                <button onClick={() => handleMoveTask(task.id, 'inbox')} title="Move to Inbox" style={{ background: 'rgba(255,255,255,0.02)', border: 'none', color: 'var(--text-muted)', padding: '2px 4px', borderRadius: 3, fontSize: 9, cursor: 'pointer' }}>📥</button>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <button onClick={() => handleMoveTask(task.id, 'inbox')} title="Move to Inbox" style={{ background: 'rgba(255,255,255,0.03)', border: 'none', color: 'var(--text-muted)', padding: '4px 8px', borderRadius: 6, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📥</button>
                                 {COLUMNS.filter(c => c.id !== col.id).map(c => (
-                                  <button key={c.id} onClick={() => handleMoveTask(task.id, c.id)} title={`Move to ${c.name}`} style={{ background: 'rgba(255,255,255,0.02)', border: 'none', color: 'var(--text-muted)', padding: '2px 4px', borderRadius: 3, fontSize: 9, cursor: 'pointer' }}>{c.icon}</button>
+                                  <button key={c.id} onClick={() => handleMoveTask(task.id, c.id)} title={`Move to ${c.name}`} style={{ background: 'rgba(255,255,255,0.03)', border: 'none', color: 'var(--text-muted)', padding: '4px 8px', borderRadius: 6, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{c.icon}</button>
                                 ))}
                               </div>
-                              <div style={{ display: 'flex', gap: 4 }}>
-                                <button onClick={() => handleMoveTask(task.id, 'done')} style={{ background: 'rgba(28, 196, 173, 0.08)', border: 'none', color: 'hsl(var(--accent-teal))', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10 }}>✓</button>
-                                <button onClick={() => handleDeleteTask(task.id)} style={{ background: 'rgba(239, 68, 68, 0.08)', border: 'none', color: 'hsl(var(--accent-red))', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10 }}>🗑</button>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <button onClick={() => handleMoveTask(task.id, 'done')} style={{ background: 'rgba(28, 196, 173, 0.08)', border: 'none', color: 'hsl(var(--accent-teal))', width: 24, height: 24, borderRadius: '50%', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✓</button>
+                                <button onClick={() => handleDeleteTask(task.id)} style={{ background: 'rgba(239, 68, 68, 0.08)', border: 'none', color: 'hsl(var(--accent-red))', width: 24, height: 24, borderRadius: '50%', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗑</button>
                               </div>
                             </div>
                           </>
@@ -766,7 +768,7 @@ export default function App() {
                         if (e.key === 'Enter') handleAddTask(col.id);
                         else if (e.key === 'Escape') setAddingToCol(null);
                       }}
-                      style={{ width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border-color)', color: '#fff', padding: '6px 10px', borderRadius: 'var(--border-radius-sm)', fontSize: 13, outline: 'none' }}
+                      style={{ width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border-color)', color: '#fff', padding: '6px 10px', borderRadius: 'var(--border-radius-sm)', fontSize: 13, fontWeight: 600, outline: 'none' }}
                       autoFocus
                     />
                     <div style={{ display: 'flex', gap: 6 }}>
@@ -942,7 +944,7 @@ export default function App() {
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {category && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '9px', fontWeight: 700, padding: '1px 6px', borderRadius: '8px', background: `${category.color}12`, color: category.color, border: `1px solid ${category.color}25` }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '12px', background: `${category.color}12`, color: category.color, border: `1px solid ${category.color}25` }}>
                             {category.emoji} {category.name}
                           </span>
                         )}
